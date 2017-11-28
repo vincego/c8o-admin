@@ -3,8 +3,8 @@ const requestPromise = require('request-promise');
 const xml2js = require("xml2js");
 const fs = require('fs');
 const { merge } = require('lodash');
-const C8oServerConnection = require('../model/C8oServerConnection');
-const { Logger } = require('../util/Log');
+const Connection = require('./Connection');
+const { Logger } = require('./Log');
 
 const Request = class Request {
 
@@ -12,11 +12,11 @@ const Request = class Request {
 
     /**
      * Build default options for request.
-     * @param {C8oServerConnection} con Server connection.
+     * @param {Connection} con Server connection.
      */
     static defaultOptions(con) {
         var options = {
-            baseUrl: con.c8oServer.uri,
+            baseUrl: con.url,
             resolveWithFullResponse: true
         }
         if (con.cookie) {
@@ -27,7 +27,7 @@ const Request = class Request {
 
     /**
      * Request Convertigo server with options.
-     * @param {C8oServerConnection} con Server connection.
+     * @param {Connection} con Server connection.
      * @param {Logger} logger Current logger.
      * @param {*} options Options sent to request-promise.
      */
@@ -64,7 +64,7 @@ const Request = class Request {
     
     /**
      * Post a file to Convertigo server.
-     * @param {C8oServerConnection} con Server to post the file to.
+     * @param {Connection} con Server to post the file to.
      * @param {Logger} logger Current logger.
      * @param {*} file File path or stream.
      * @param {*} options Options sent to request-promise.
@@ -85,7 +85,7 @@ const Request = class Request {
 
     /**
      * Get a file from Convertigo server.
-     * @param {C8oServerConnection} con Server to post the file to.
+     * @param {Connection} con Server to post the file to.
      * @param {Logger} logger Current logger.
      * @param {string} destDir 
      * @param {*} options Options sent to request-promise.

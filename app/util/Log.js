@@ -1,31 +1,43 @@
-const winston = require('winston');
+const { createLogger, format, transports } = require('winston');
 
 var wlogger = null;
 
 const Logger = class Logger {
 
-    constructor(tag) {
-        this.tag = tag;
-    }
-    
-    tagMessage(message) {
-        return '[' + this.tag + '] ' + message;
+    constructor(label) {
+        this.label = label;
     }
 
-    debug(message, args) {
-        wlogger.log('debug', this.tagMessage(message));
+    debug(message) {
+        wlogger.log({
+            level: 'debug',
+            label: this.label,
+            message: message
+        });
     }
     
-    info(message, args) {
-        wlogger.log('info', this.tagMessage(message));
+    info(message) {
+        wlogger.log({
+            level: 'info',
+            label: this.label,
+            message: message
+        });
     }
     
     warn(message, args) {
-        wlogger.log('warn', this.tagMessage(message));
+        wlogger.log({
+            level: 'warn',
+            label: this.label,
+            message: message
+        });
     }
     
     error(message, args) {
-        wlogger.log('error', this.tagMessage(message));
+        wlogger.log({
+            level: 'error',
+            label: this.label,
+            message: message
+        });
     }
 }
 
@@ -34,25 +46,28 @@ const Log = class Log {
     constructor() { }
 
     static init(filename) {
-        wlogger = winston.createLogger({
-            format: winston.format.simple(),
+        wlogger = createLogger({
+            //format: format.simple(),
+            format: format.printf(info => { 
+                return `[${info.label}] ${info.level}: ${info.message}`;
+            }),
             /*(info) => {
                 return info.timestamp + ' ' + info.label + ' ' + info.level + ': ' + info.message;
             }*/
             transports: [
-                new winston.transports.Console({ level: 'info' }),
-                new winston.transports.File({ filename: filename + '.debug.log', level: 'debug' }),
-                new winston.transports.File({ filename: filename + '.error.log', level: 'error' })
+                new transports.Console({ level: 'info' }),
+                new transports.File({ filename: filename + '.debug.log', level: 'debug' }),
+                new transports.File({ filename: filename + '.error.log', level: 'error' })
             ]
         });
     }
 
     /**
      * 
-     * @param {String} tag 
+     * @param {String} label 
      */
-    static logger(tag) {
-        return new Logger(tag);
+    static logger(label) {
+        return new Logger(label);
     }
 }
 

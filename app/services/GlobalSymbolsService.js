@@ -257,5 +257,4 @@ module.exports = class GlobalSymbolsService {
         return this.import(con, file, this.importModes.MERGE_PRIORITY_IMPORT);
     }
 
-
 }

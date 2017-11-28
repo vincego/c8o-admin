@@ -17,7 +17,7 @@ module.exports = class EngineService {
      * @param {Connection} con Convertigo server connection.
      */
     login(con) {
-        var logger = con.logger('login');
+        var logger = con.logger('engine login');
         logger.info('Login user ' + con.username + '...');
         return new Promise((resolve, reject) => {
             Request.post(con, logger, {
@@ -52,7 +52,7 @@ module.exports = class EngineService {
      * @param {Connection} con Convertigo server connection.
      */
     logout(con) {
-        var logger = con.logger('logout');
+        var logger = con.logger('engine logout');
         logger.info('Logout user ' + con.username + '...');
         return new Promise((resolve, reject) => {
             Request.post(con, logger, {

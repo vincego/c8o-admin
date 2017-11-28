@@ -1,7 +1,7 @@
 const { URL } = require('url');
 const Log = require('./Log');
 
-const Connection = class Connection {
+module.exports = class Connection {
     
     /**
      * Constructs connection to a Convertigo server.
@@ -58,10 +58,10 @@ const Connection = class Connection {
 
     /**
      * Create a logger dedicated to some action on Convertigo server.
-     * @param {string} action Action appended to tag.
+     * @param {string} action Action appended to label.
      */
     logger(action) {
-        var tag = '';
+        var label = '';
         if (this._url) {
             var url = new URL(this._url);
             var host = url.hostname;
@@ -69,15 +69,13 @@ const Connection = class Connection {
             if (dot > 0) {
                 host = host.substring(0, dot);
             }
-            tag += ' ' + host + ' ' + url.port;
+            label += host + ':' + url.port;
         } else {
-            tag += '[no server]';
+            label += '[no server]';
         }
         if (action && action != '') {
-            tag += ' ' + action;
+            label += ' ' + action;
         }
-        return Log.logger(tag.trim());
+        return Log.logger(label.trim());
     }
 }
-    
-module.exports = C8oServerConnection;
