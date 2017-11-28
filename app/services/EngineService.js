@@ -18,7 +18,7 @@ module.exports = class EngineService {
      */
     login(con) {
         var logger = con.logger('engine login');
-        logger.info('Login user ' + con.username + '...');
+        logger.info('Login user %s...', con.username);
         return new Promise((resolve, reject) => {
             Request.post(con, logger, {
                 uri: AUTH_ENDPOINT,

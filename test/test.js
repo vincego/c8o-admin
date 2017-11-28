@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Connection = require('../app/util/Connection');
 const Service = require('../app/services/service');
-const logger = require('../app/util/Log').logger('Test');
+const logger = require('../app/util/Log').init('test/test').logger('Test');
 
 class Test {
 

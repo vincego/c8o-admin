@@ -1,65 +1,19 @@
 const { createLogger, format, transports } = require('winston');
 
-var wlogger = null;
-
-const Logger = class Logger {
-
-    constructor(label) {
-        this.label = label;
-    }
-
-    debug(message) {
-        wlogger.log({
-            level: 'debug',
-            label: this.label,
-            message: message
-        });
-    }
-    
-    info(message) {
-        wlogger.log({
-            level: 'info',
-            label: this.label,
-            message: message
-        });
-    }
-    
-    warn(message, args) {
-        wlogger.log({
-            level: 'warn',
-            label: this.label,
-            message: message
-        });
-    }
-    
-    error(message, args) {
-        wlogger.log({
-            level: 'error',
-            label: this.label,
-            message: message
-        });
-    }
-}
+var _transports = [ new transports.Console({ level: 'info' }) ];
 
 const Log = class Log {
 
     constructor() { }
 
     static init(filename) {
-        wlogger = createLogger({
-            //format: format.simple(),
-            format: format.printf(info => { 
-                return `[${info.label}] ${info.level}: ${info.message}`;
-            }),
-            /*(info) => {
-                return info.timestamp + ' ' + info.label + ' ' + info.level + ': ' + info.message;
-            }*/
-            transports: [
-                new transports.Console({ level: 'info' }),
-                new transports.File({ filename: filename + '.debug.log', level: 'debug' }),
-                new transports.File({ filename: filename + '.error.log', level: 'error' })
-            ]
-        });
+        _transports = [
+            new transports.Console({ level: 'info' }),
+            new transports.File({ filename: filename + '.debug.log', level: 'debug' }),
+            new transports.File({ filename: filename + '.error.log', level: 'error' })
+        ];
+
+        return Log;
     }
 
     /**
@@ -67,11 +21,18 @@ const Log = class Log {
      * @param {String} label 
      */
     static logger(label) {
-        return new Logger(label);
+        //return new Logger(label);
+        return createLogger({
+            format: format.combine(
+                format.label({ label: label }),
+                format.timestamp(),
+                format.splat(),
+                format.printf(info => { 
+                    return `${info.timestamp} ${info.level.toUpperCase()} [${info.label}] ${info.message}`;
+                })),
+            transports: _transports
+        })
     }
 }
-
-Log.Logger = Logger;
-Log.init('app');
 
 module.exports = Log;
