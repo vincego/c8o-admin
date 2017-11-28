@@ -1,0 +1,22 @@
+{
+  "role1": {
+    "password": "412790779c86a46c5b0710e61fa22a4a",
+    "roles": ["HOME_VIEW"]
+  },
+  "role2": {
+    "password": "85d3de3c82743d062ef86d1d48b95649",
+    "roles": [
+      "LOGS_CONFIG",
+      "TRACE_CONFIG",
+      "PROJECT_DBO_CONFIG",
+      "CACHE_CONFIG",
+      "PROJECTS_CONFIG",
+      "SCHEDULER_CONFIG",
+      "TEST_PLATFORM",
+      "CONNECTIONS_CONFIG",
+      "SYMBOLS_CONFIG",
+      "STORE_CONFIG",
+      "HOME_CONFIG"
+    ]
+  }
+}
