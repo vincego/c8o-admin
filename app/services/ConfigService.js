@@ -1,6 +1,8 @@
 const jsontoxml = require('jsontoxml');
 const Request = require('../util/Request');
 const Connection = require('../util/Connection');
+const Log = require('../util/Log');
+const LOGGER = function(con) { return Log.logger('ConfigService', con); };
 
 const BASE_ENDPOINT = '/admin/services/configuration';
 const UPDATE_ENDPOINT = BASE_ENDPOINT + '.Update';

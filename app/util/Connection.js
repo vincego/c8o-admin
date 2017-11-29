@@ -1,6 +1,3 @@
-const { URL } = require('url');
-const Log = require('./Log');
-
 module.exports = class Connection {
     
     /**
@@ -56,26 +53,4 @@ module.exports = class Connection {
         this._cookie = cookie;
     }
 
-    /**
-     * Create a logger dedicated to some action on Convertigo server.
-     * @param {string} action Action appended to label.
-     */
-    logger(action) {
-        var label = '';
-        if (this._url) {
-            var url = new URL(this._url);
-            var host = url.hostname;
-            var dot = host.indexOf('.');
-            if (dot > 0) {
-                host = host.substring(0, dot);
-            }
-            label += host + ':' + url.port;
-        } else {
-            label += '[no server]';
-        }
-        if (action && action != '') {
-            label += ' ' + action;
-        }
-        return Log.logger(label.trim());
-    }
 }

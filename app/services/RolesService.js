@@ -1,7 +1,10 @@
 const Request = require('../util/Request');
 const Connection = require('../util/Connection');
+const Log = require('../util/Log');
+const LOGGER = function(con) { return Log.logger('RolesService', con); };
 
-const IMPORT_ENDPOINT = '/admin/services/roles.Import';
+const BASE_ENDPOINT = '/admin/services/roles';
+const IMPORT_ENDPOINT = BASE_ENDPOINT + '.Import';
 
 const IMPORT_MODES = [
     { 'name': 'CLEAR_IMPORT', 'qs': { 'action-import': 'clear-import' }},
@@ -26,7 +29,7 @@ module.exports = class RolesService {
      * @param {number} mode Should be one of CLEAR_IMPORT, MERGE_PRIORITY_SERVER, MERGE_PRIORITY_IMPORT.
      */
     import(con, file, mode) {
-        var logger = con.logger('roles import');
+        var logger = LOGGER(con);
         logger.info('Importing roles...');
         var importMode = IMPORT_MODES[mode];
         logger.debug('Mode: ' + importMode.name);
