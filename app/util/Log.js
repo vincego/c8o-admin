@@ -21,7 +21,6 @@ const Log = class Log {
      * @param {String} label 
      */
     static logger(label) {
-        //return new Logger(label);
         return createLogger({
             format: format.combine(
                 format.label({ label: label }),
