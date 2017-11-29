@@ -32,6 +32,7 @@ const Request = class Request {
      * @param {*} options Options sent to request-promise.
      */
     static post(con, logger, options) {
+        logger.debug('POST to %s', con.url);
         // Set defaults options and merge with user options.
         var allOptions = Request.defaultOptions(con);
         allOptions.method = 'POST';
@@ -42,7 +43,7 @@ const Request = class Request {
         return new Promise((resolve, reject) => {
             requestPromise(allOptions)
             .then((response) => {
-                logger.info('Request success');
+                logger.debug('Request success');
                 logger.debug('Response body: ' + response.body);
                 xml2js.parseString(response.body, (error, result) => {
                     if (error) {
@@ -70,6 +71,8 @@ const Request = class Request {
      * @param {*} options Options sent to request-promise.
      */
     static postFile(con, logger, file, options) {
+        logger.debug('POST file to %s', con.url);
+
         var fileData = file;
         if (typeof(file) == 'string') {
             logger.debug('File: ' + file);
@@ -91,6 +94,8 @@ const Request = class Request {
      * @param {*} options Options sent to request-promise.
      */
     static getFile(con, logger, destDir, options) {
+        logger.debug('GET file from %s', con.url);
+
         // Set defaults options and merge with user options.
         var allOptions = Request.defaultOptions(con);
         allOptions.method = 'GET';

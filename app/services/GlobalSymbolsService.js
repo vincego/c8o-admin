@@ -29,7 +29,7 @@ module.exports = class GlobalSymbolsService {
      * @param {string} names Optional names of the symbols to list.
      */
     list(con, names) {
-        var logger = con.logger('global symbols list');
+        var logger = con.logger('GlobalSymbols.list');
         logger.info('Listing global symbol...');
         logger.debug('Names: ' + names);
         return new Promise((resolve, reject) => {
@@ -81,7 +81,7 @@ module.exports = class GlobalSymbolsService {
      * @param {string} value Value of the symbol to add.
      */
     add(con, name, value) {
-        var logger = con.logger('global symbols add');
+        var logger = con.logger('GlobalSymbols.add');
         logger.info('Adding global symbol...');
         logger.debug('Name: ' + name);
         logger.debug('Value: ' + value);
@@ -118,7 +118,7 @@ module.exports = class GlobalSymbolsService {
      * @param {string} name Name of the symbol to add.
      */
     delete(con, name) {
-        var logger = con.logger('global symbols delete');
+        var logger = con.logger('GlobalSymbols.delete');
         logger.info('Deleting global symbol...');
         logger.debug('Name: ' + name);
         return new Promise((resolve, reject) => {
@@ -153,7 +153,7 @@ module.exports = class GlobalSymbolsService {
      * @param {string} value Value of the symbol to edit.
      */
     edit(con, oldName, name, value) {
-        var logger = con.logger('global symbols edit');
+        var logger = con.logger('GlobalSymbols.edit');
         logger.info('Editing global symbol...');
         logger.debug('Old name: ' + oldName);
         logger.debug('Name: ' + name);
@@ -209,7 +209,7 @@ module.exports = class GlobalSymbolsService {
      * @param {number} mode Should be one of CLEAR_IMPORT, MERGE_PRIORITY_SERVER, MERGE_PRIORITY_IMPORT.
      */
     import(con, file, mode) {
-        var logger = con.logger('global symbols import');
+        var logger = con.logger('GlobalSymbols.import');
         logger.info('Importing global symbols...');
         var importMode = IMPORT_MODES[mode];
         logger.debug('Mode: ' + importMode.name);

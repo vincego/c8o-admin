@@ -17,8 +17,8 @@ module.exports = class EngineService {
      * @param {Connection} con Convertigo server connection.
      */
     login(con) {
-        var logger = con.logger('engine login');
-        logger.info('Login user %s...', con.username);
+        var logger = con.logger('Engine.login');
+        logger.info('Login user "%s"...', con.username);
         return new Promise((resolve, reject) => {
             Request.post(con, logger, {
                 uri: AUTH_ENDPOINT,
@@ -37,7 +37,7 @@ module.exports = class EngineService {
                 } else {
                     logger.info('Login successful');
                     con.cookie = response.headers['set-cookie'];
-                    logger.debug('Cookie: ' + con.cookie);
+                    logger.debug('Cookie: %s', con.cookie);
                     resolve(response);
                 }
             })
@@ -52,8 +52,8 @@ module.exports = class EngineService {
      * @param {Connection} con Convertigo server connection.
      */
     logout(con) {
-        var logger = con.logger('engine logout');
-        logger.info('Logout user ' + con.username + '...');
+        var logger = con.logger('Engine.logout');
+        logger.info('Logout user "%s"...', con.username);
         return new Promise((resolve, reject) => {
             Request.post(con, logger, {
                 uri: AUTH_ENDPOINT,
@@ -75,7 +75,7 @@ module.exports = class EngineService {
      * @param {Connection} con Convertigo server connection.
      */
     status(con) {
-        var logger = con.logger('engine status');
+        var logger = con.logger('Engine.status');
         logger.info('Getting engine status...');
         return new Promise((resolve, reject) => {
             Request.post(con, logger, {
@@ -102,7 +102,7 @@ module.exports = class EngineService {
      * @param {Connection} con Convertigo server connection.
      */
     start(con) {
-        var logger = con.logger('engine start');
+        var logger = con.logger('Engine.start');
         logger.info('Starting engine...');
         return Request.post(con, logger, { uri: START_ENDPOINT });
     }
@@ -112,7 +112,7 @@ module.exports = class EngineService {
      * @param {Connection} con Convertigo server connection.
      */
     stop(con) {
-        var logger = con.logger('engine stop');
+        var logger = con.logger('Engine.stop');
         logger.info('Stopping engine...');
         return Request.post(con, logger, { uri: STOP_ENDPOINT });
     }
@@ -122,7 +122,7 @@ module.exports = class EngineService {
      * @param {Connection} con Convertigo server connection.
      */
     restart(con) {
-        var logger = con.logger('engine restart');
+        var logger = con.logger('Engine.restart');
         logger.info('Restarting engine...');
         return this.stop(con)
         .then(() => { 
