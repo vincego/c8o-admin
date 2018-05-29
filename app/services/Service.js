@@ -3,6 +3,7 @@ const EngineService = require('./EngineService');
 const GlobalSymbolsService = require('./GlobalSymbolsService');
 const ProjectsService = require('./ProjectsService');
 const RolesService = require('./RolesService');
+const KeysService = require('./KeysService');
 
 module.exports = class Service {
 
@@ -12,6 +13,7 @@ module.exports = class Service {
         this._globalSymbols = new GlobalSymbolsService();
         this._projects = new ProjectsService();
         this._roles = new RolesService();
+        this._keys = new KeysService();
     }
 
     /**
@@ -49,5 +51,12 @@ module.exports = class Service {
      */
     get roles() {
         return this._roles;
+    }
+    /**
+     * Get keys service.
+     * @return {KeysService}
+     */
+    get keys() {
+        return this._keys;
     }
 }

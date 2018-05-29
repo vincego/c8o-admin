@@ -1,6 +1,6 @@
 const fs = require('fs');
 const Connection = require('../app/util/Connection');
-const Service = require('../app/services/service');
+const Service = require('../app/services/Service');
 const logger = require('../app/util/Log').init('test/test').logger('Test');
 
 class Test {
@@ -160,11 +160,47 @@ class Test {
             this.handleError(con, error);
         });
     }
+
+    testKeys(con) {
+        // Login
+        return this.service.engine.login(con)
+        // List
+        .then(() => {
+            return this.service.keys.list(con);
+        })
+        .then((response) => {
+            logger.info('Keys: ' + JSON.stringify(response.keys));
+        })
+        // Add one
+        .then(() => {
+            return this.service.keys.add(con, "EA1BD9DDC9CF0954-4DA6398E3CE81833");
+        })
+         // Add multiple
+        .then(() => {
+            return this.service.keys.add(con, ["EA1BD9DDC9CF0954-4DA6398E3CE81833","C7082D3DD393C1A6-8CB896ECA04C984D"]);
+        })
+		// Remove one
+        .then(() => {
+            return this.service.keys.remove(con, "EA1BD9DDC9CF0954-4DA6398E3CE81833");
+        })
+         // Remove multiple
+        .then(() => {
+            return this.service.keys.remove(con, ["EA1BD9DDC9CF0954-4DA6398E3CE81833","C7082D3DD393C1A6-8CB896ECA04C984D"]);
+        })
+        // Logout
+        .then(() => {
+            return this.service.engine.logout(con);
+        })
+        .catch((error) => {
+            this.handleError(con, error);
+        });
+    }
 }
 
 var test = new Test();
 var con = test.initConnection();
 //test.testServer(con);
 //test.testListConfig(con);
-test.testGlobalSymbols(con);
+//test.testGlobalSymbols(con);
+test.testKeys(con);
         
