@@ -1,20 +1,39 @@
-const { createLogger, format, transports } = require('winston');
+const winston = require('winston');
+const bunyan = require('bunyan');
 const { URL } = require('url');
 const Connection = require('./Connection');
 
-var _transports = [ new transports.Console({ level: 'info' }) ];
+const DEBUG_IN_CONSOLE = false;
+const OUTPUT_CONSOLE = 0;
+const OUTPUT_WINSTON = 1;
+const OUTPUT_BUNYAN = 2;
+var outputMode = OUTPUT_BUNYAN;
+
+var consoleMode = true;
+var consoleModeDebug = false;
+var winstonTransports = [ new winston.transports.Console({ level: 'info' }) ];
+var bunyanStreams = [ { level: 'info', stream: process.stdout } ];
+var ip4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
 const Log = class Log {
 
     constructor() { }
 
     static init(filename) {
-        _transports = [
-            new transports.Console({ level: 'info' }),
-            new transports.File({ filename: filename + '.debug.log', level: 'debug' }),
-            new transports.File({ filename: filename + '.error.log', level: 'error' })
-        ];
-
+		if (outputMode == OUTPUT_WINSTON) {
+			winstonTransports = [
+				new winston.transports.Console({ level: 'info' }),
+				new winston.transports.File({ filename: filename + '.debug.log', level: 'debug' }),
+				new winston.transports.File({ filename: filename + '.error.log', level: 'error' })
+			];
+		}
+		else if (outputMode == OUTPUT_BUNYAN) {
+			bunyanStreams = [
+				{ level: 'info', stream: process.stdout },
+				{ level: 'debug', path: filename + '.debug.log' },
+				{ level: 'error', path: filename + '.error.log' }
+			];
+		}
         return Log;
     }
 
@@ -29,23 +48,41 @@ const Log = class Log {
             var url = new URL(con.url);
             var host = url.hostname;
             var dot = host.indexOf('.');
-            if (dot > 0) {
+            if ((dot > 0) && !host.match(ip4Regex)) {
                 host = host.substring(0, dot);
             }
             infoLabel += '@' + host + ':' + url.port;
         }
-        return createLogger({
-            format: format.combine(
-                format.label({ label: infoLabel }),
-                format.timestamp(),
-                format.splat(),
-                format.printf(info => { 
-                    return `${info.timestamp} ${info.level.toUpperCase()} [${info.label}] ${info.message}`;
-                })),
-            transports: _transports
-        })
+		if (outputMode == OUTPUT_CONSOLE) {
+			return {
+				error: function(m,e) { console.log(new Date().toISOString() + " ERROR [" + infoLabel + "] " + m); console.log(e); },
+				warn: function(m) { console.log(new Date().toISOString() + " WARN [" + infoLabel + "] " + m); },
+				info: function(m,s) { console.log(new Date().toISOString() + " INFO [" + infoLabel + "] " + m.replace(/%s/,s)); },
+				debug: function(m,s) { if (DEBUG_IN_CONSOLE) { console.log(new Date().toISOString() + " DEBUG [" + infoLabel + "] " + m.replace(/%s/,s)); }},
+			};
+		}
+		else if (outputMode == OUTPUT_WINSTON) {
+			return winston.createLogger({
+				format: winston.format.combine(
+					winston.format.label({ label: infoLabel }),
+					winston.format.timestamp(),
+					winston.format.splat(),
+					winston.format.printf(info => { 
+						return `${info.timestamp} ${info.level.toUpperCase()} [${info.label}] ${info.message}`;
+					})),
+				transports: winstonTransports
+			});
+		}
+		else if (outputMode == OUTPUT_BUNYAN) {
+			return bunyan.createLogger({
+				name: infoLabel,
+				streams : bunyanStreams
+			});
+		}
     }
 
+	static consoleLogger(label) {
+	}
 }
 
 module.exports = Log;
