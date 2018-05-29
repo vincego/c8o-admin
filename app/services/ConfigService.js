@@ -15,7 +15,7 @@ module.exports = class ConfigService {
     /**
      * Update configuration
      * @param {Connection} con Convertigo server connection.
-     * @param {*} config 
+     * @param {*} config Config is a map of key / value
      */
     update(con, config) {
         var logger = con.logger('config update');
