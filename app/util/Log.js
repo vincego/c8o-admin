@@ -1,3 +1,4 @@
+const util = require('util');
 const winston = require('winston');
 const bunyan = require('bunyan');
 const { URL } = require('url');
@@ -7,7 +8,7 @@ const DEBUG_IN_CONSOLE = false;
 const OUTPUT_CONSOLE = 0;
 const OUTPUT_WINSTON = 1;
 const OUTPUT_BUNYAN = 2;
-var outputMode = OUTPUT_BUNYAN;
+var outputMode = OUTPUT_CONSOLE;
 
 var consoleMode = true;
 var consoleModeDebug = false;
@@ -57,8 +58,8 @@ const Log = class Log {
 			return {
 				error: function(m,e) { console.log(new Date().toISOString() + " ERROR [" + infoLabel + "] " + m); console.log(e); },
 				warn: function(m) { console.log(new Date().toISOString() + " WARN [" + infoLabel + "] " + m); },
-				info: function(m,s) { console.log(new Date().toISOString() + " INFO [" + infoLabel + "] " + m.replace(/%s/,s)); },
-				debug: function(m,s) { if (DEBUG_IN_CONSOLE) { console.log(new Date().toISOString() + " DEBUG [" + infoLabel + "] " + m.replace(/%s/,s)); }},
+				info: function() { console.log(new Date().toISOString() + " INFO [" + infoLabel + "] " + util.format.apply(null,arguments)); },
+				debug: function() { if (DEBUG_IN_CONSOLE) { console.log(new Date().toISOString() + " DEBUG [" + infoLabel + "] " + util.format.apply(null,arguments)); }},
 			};
 		}
 		else if (outputMode == OUTPUT_WINSTON) {
