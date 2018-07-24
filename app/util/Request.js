@@ -37,27 +37,27 @@ const Request = class Request {
         var allOptions = Request.defaultOptions(con);
         allOptions.method = 'POST';
         allOptions = merge(allOptions, options);
-        logger.debug('Request options: ' + JSON.stringify(allOptions));
+        logger.debug('Request options: %s', JSON.stringify(allOptions));
 
         // Execute request
         return new Promise((resolve, reject) => {
             requestPromise(allOptions)
             .then((response) => {
                 logger.debug('Request success');
-                logger.debug('Response body: ' + response.body);
+                logger.debug('Response body: %s', response.body);
                 xml2js.parseString(response.body, (error, result) => {
                     if (error) {
-                        logger.error('Parsing error : ' + error);
+                        logger.error('XML to JSON parsing error!', error);
                         reject(error);
                     } else {
-                        logger.debug('Response JSON: ' + JSON.stringify(result));
+                        logger.debug('Response JSON: %s', JSON.stringify(result));
                         response.json = result;
                         resolve(response);
                     }
                 });
             })
             .catch((error) => {
-                logger.error('Request error: ' + error);
+                logger.error('Request error!', error);
                 reject(error);
             });
         });
@@ -75,7 +75,7 @@ const Request = class Request {
 
         var fileData = file;
         if (typeof(file) == 'string') {
-            logger.debug('File: ' + file);
+            logger.debug('File: %s', file);
             fileData = fs.createReadStream(file);
         }
         var allOptions = {
@@ -100,13 +100,13 @@ const Request = class Request {
         var allOptions = Request.defaultOptions(con);
         allOptions.method = 'GET';
         allOptions = merge(allOptions, options);
-        logger.debug('Request options: ' + JSON.stringify(allOptions));
+        logger.debug('Request options: %s', JSON.stringify(allOptions));
 
         // Execute request
         return new Promise((resolve, reject) => {
             request(allOptions)
             .on('response', (response) => {
-                logger.debug('Response headers: ' + JSON.stringify(response.headers));
+                logger.debug('Response headers: %s', JSON.stringify(response.headers));
                 var contentDisposition = response.headers['content-disposition'];
                 // "content-disposition":"attachment; filename=\"TestProject.car\""
                 var fileName = contentDisposition.match(/filename="(.*?)"/ )[1];
