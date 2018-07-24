@@ -5,9 +5,9 @@
   "keywords": [
     "convertigo"
   ],
-  "homepage": "https://github.com/VincentGombert/c8o-admin",
+  "homepage": "https://github.com/vincego/c8o-admin",
   "license": "GPL-3.0",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
