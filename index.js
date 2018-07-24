@@ -1,2 +1,2 @@
-exports.Connection = require('app/util/Connection');
-exports.Service = require('app/services/Service');
+exports.Connection = require('./app/util/Connection');
+exports.Service = require('./app/services/Service');
