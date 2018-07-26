@@ -18,7 +18,7 @@ module.exports = class ConfigService {
      * @param {*} config Config is a map of key / value
      */
     update(con, config) {
-        var logger = con.logger('config update');
+        var logger = LOGGER(con);
         logger.info('Updating config...');
         logger.debug('Config: ' + JSON.stringify(config));
         return new Promise((resolve, reject) => {
@@ -49,7 +49,7 @@ module.exports = class ConfigService {
      * @param {*} names 
      */
     list(con, names){
-        var logger = con.logger('config list');
+        var logger = LOGGER(con);
         logger.info('Listing config...');
         logger.debug('Names: ' + names);
         return new Promise((resolve, reject) => {
