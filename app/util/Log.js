@@ -10,8 +10,6 @@ const OUTPUT_WINSTON = 1;
 const OUTPUT_BUNYAN = 2;
 var outputMode = OUTPUT_CONSOLE;
 
-var consoleMode = true;
-var consoleModeDebug = false;
 var winstonTransports = [ new winston.transports.Console({ level: 'info' }) ];
 var bunyanStreams = [ { level: 'info', stream: process.stdout } ];
 var ip4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -56,7 +54,7 @@ const Log = class Log {
         }
 		if (outputMode == OUTPUT_CONSOLE) {
 			return {
-				error: function(m,e) { console.log(new Date().toISOString() + " ERROR [" + infoLabel + "] " + m); console.log(e); },
+				error: function(m,e) { console.log(new Date().toISOString() + " ERROR [" + infoLabel + "] " + m); if (e) { console.log(e); } },
 				warn: function(m) { console.log(new Date().toISOString() + " WARN [" + infoLabel + "] " + m); },
 				info: function() { console.log(new Date().toISOString() + " INFO [" + infoLabel + "] " + util.format.apply(null,arguments)); },
 				debug: function() { if (DEBUG_IN_CONSOLE) { console.log(new Date().toISOString() + " DEBUG [" + infoLabel + "] " + util.format.apply(null,arguments)); }},
