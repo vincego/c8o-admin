@@ -1,3 +1,4 @@
+const CertificatesService = require('./CertificatesService');
 const ConfigService = require('./ConfigService');
 const EngineService = require('./EngineService');
 const GlobalSymbolsService = require('./GlobalSymbolsService');
@@ -8,12 +9,21 @@ const KeysService = require('./KeysService');
 module.exports = class Service {
 
     constructor() {
+        this._certificates = new CertificatesService();
         this._config = new ConfigService();
         this._engine = new EngineService();
         this._globalSymbols = new GlobalSymbolsService();
         this._projects = new ProjectsService();
         this._roles = new RolesService();
         this._keys = new KeysService();
+    }
+
+    /**
+     * Get certificates service.
+     * @return {CertificatesService}
+     */
+    get certificates() {
+        return this._certificates;
     }
 
     /**

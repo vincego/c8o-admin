@@ -195,6 +195,48 @@ class Test {
             this.handleError(con, error);
         });
     }
+	
+	testCertificates(con) {
+		// Login
+        return this.service.engine.login(con)
+        // List
+        .then(() => {
+			return this.service.certificates.list(con);
+		})
+		.then((response) => {
+            logger.info('Certificates: ' + JSON.stringify(response.certificates));
+            logger.info('Candidates: ' + JSON.stringify(response.candidates));
+            logger.info('Bindings: ' + JSON.stringify(response.bindings));
+        })
+/*        // Install
+        .then(() => {
+            var file = 'test/cacerts.store';
+            logger.info('Install certificate : ' + file);
+            return this.service.certificates.install(con, file);
+        })
+        // List
+        .then(() => {
+			return this.service.certificates.list(con);
+		})
+		.then((response) => {
+            logger.info('Certificates: ' + JSON.stringify(response.certificates));
+            logger.info('Candidates: ' + JSON.stringify(response.candidates));
+            logger.info('Bindings: ' + JSON.stringify(response.bindings));
+        })
+        // Update
+        .then(() => {
+            return this.service.certificates.update(con, 'cacerts.store', 'server', 'pwd', '');
+        })
+        // List
+        .then(() => {
+			return this.service.certificates.list(con);
+		})
+		.then((response) => {
+            logger.info('Certificates: ' + JSON.stringify(response.certificates));
+            logger.info('Candidates: ' + JSON.stringify(response.candidates));
+            logger.info('Bindings: ' + JSON.stringify(response.bindings));
+        })*/
+	}
 }
 
 var test = new Test();
@@ -202,5 +244,6 @@ var con = test.initConnection();
 //test.testServer(con);
 //test.testListConfig(con);
 //test.testGlobalSymbols(con);
-test.testKeys(con);
+//test.testKeys(con);
+test.testCertificates(con);
         
