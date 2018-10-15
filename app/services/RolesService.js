@@ -72,10 +72,17 @@ module.exports = class RolesService {
 				}
             })
             .then((response) => {
-                // response body is <admin service="keys.Update"><keys><key errorMessage="The key has already been added!" text="38CE723612053DF4-8505DDDF26664A50" valid="false"><key text="EA1BD9DDC9CF0954-4DA6398E3CE81833" valid="true"/></keys></admin>
-				response.message = this.jsonToMessage(response.json);
-                logger.info(response.message);
-                resolve(response);
+                // response body is <admin service="roles.Add"><response message="User 'test' have been successfully declared!" state="success"/></admin>
+                var status = response.json.admin.response[0]['$']['state'];
+                logger.debug('Status: ' + status);
+                response.message = response.json.admin.response[0]['$']['message'];
+                logger.debug('Message: ' + response.message);
+                if (status == 'success') {
+                    resolve(response);
+                } else {
+                    logger.error(response.message);
+                    reject(response.message);
+                }
              })
             .catch((error) => {
                 reject(error);
@@ -108,10 +115,17 @@ module.exports = class RolesService {
 				}
             })
             .then((response) => {
-                // response body is <admin service="keys.Update"><keys><key errorMessage="The key has already been added!" text="38CE723612053DF4-8505DDDF26664A50" valid="false"><key text="EA1BD9DDC9CF0954-4DA6398E3CE81833" valid="true"/></keys></admin>
-				response.message = this.jsonToMessage(response.json);
-                logger.info(response.message);
-                resolve(response);
+                // response body is <admin service="roles.Edit"><response message="User 'test' have been successfully edited!" state="success"/></admin>
+                var status = response.json.admin.response[0]['$']['state'];
+                logger.debug('Status: ' + status);
+                response.message = response.json.admin.response[0]['$']['message'];
+                logger.debug('Message: ' + response.message);
+                if (status == 'success') {
+                    resolve(response);
+                } else {
+                    logger.error(response.message);
+                    reject(response.message);
+                }
              })
             .catch((error) => {
                 reject(error);
