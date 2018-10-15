@@ -64,7 +64,7 @@ module.exports = class RolesService {
         logger.debug('Roles: ' + JSON.stringify(roles));
         return new Promise((resolve, reject) => {
             Request.post(con, logger, {
-                uri: UPDATE_ENDPOINT,
+                uri: ADD_ENDPOINT,
 				form: {
 					username: username,
 					password: password,
@@ -82,16 +82,6 @@ module.exports = class RolesService {
             });
         });
     }
-    
-	addMultiple(con, users) {
-		var promises = [];
-		for (var i=0; i<users; i++) {
-			var user = users[i];
-			promises.push(this.add(user.username, user.password, user.roles));
-		}
-		return Promise.all(promises);
-	}
-	
 	
     /**
      * Add user
