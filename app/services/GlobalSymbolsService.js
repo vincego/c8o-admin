@@ -117,7 +117,7 @@ module.exports = class GlobalSymbolsService {
     /**
      * Delete a global symbol, rejecting if symbol does not exists.
      * @param {Connection} con Convertigo server connection.
-     * @param {string} name Name of the symbol to add.
+     * @param {string} name Name of the symbol to delete.
      */
     delete(con, name) {
         var logger = LOGGER(con);
