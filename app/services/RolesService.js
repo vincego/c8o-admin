@@ -1,3 +1,4 @@
+const queryString = require('query-string');
 const Request = require('../util/Request');
 const Connection = require('../util/Connection');
 const Log = require('../util/Log');
@@ -33,15 +34,15 @@ module.exports = class RolesService {
      * @param {Connection} con Convertigo server connection.
      */
     list(con) {
-        var logger = LOGGER(con);
-        logger.info('Listing users and their roles...');
         return new Promise((resolve, reject) => {
+			var logger = LOGGER(con);
+			logger.info('Listing users...');
             Request.post(con, logger, {
                 uri: LIST_ENDPOINT,
             })
             .then((response) => {
                 response.users = this.jsonToUsers(response.json);
-                logger.debug('Users: ' + JSON.stringify(response.users));
+                logger.info('Users: %s', JSON.stringify(response.users));
                 resolve(response);
              })
             .catch((error) => {
@@ -58,29 +59,24 @@ module.exports = class RolesService {
      * @param {*} roles Array of roles names.
      */
     add(con, username, password, roles) {
-        var logger = LOGGER(con);
-        logger.info('Adding user...');var form
-        logger.debug('Name: ' + username);
-        logger.debug('Roles: ' + JSON.stringify(roles));
         return new Promise((resolve, reject) => {
+			var logger = LOGGER(con);
+			logger.info('Adding user "%s"...', username);
+			logger.info('Roles: %s', JSON.stringify(roles));
             Request.post(con, logger, {
                 uri: ADD_ENDPOINT,
-				form: {
-					username: username,
-					password: password,
-					roles: roles
-				}
+				// Using body + content-type instead of form to handle roles array correctly
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+				body: queryString.stringify( { username: username, password: password, roles: roles } )
             })
             .then((response) => {
                 // response body is <admin service="roles.Add"><response message="User 'test' have been successfully declared!" state="success"/></admin>
                 var status = response.json.admin.response[0]['$']['state'];
-                logger.debug('Status: ' + status);
                 response.message = response.json.admin.response[0]['$']['message'];
-                logger.debug('Message: ' + response.message);
+				logger.info('Response: %s - %s', status, response.message);
                 if (status == 'success') {
                     resolve(response);
                 } else {
-                    logger.error(response.message);
                     reject(response.message);
                 }
              })
@@ -99,20 +95,18 @@ module.exports = class RolesService {
      * @param {*} roles Array of roles names.
      */
     edit(con, oldUsername, username, password, roles) {
-        var logger = LOGGER(con);
-        logger.info('Editing user...');var form
-        logger.debug('Old name: ' + oldUsername);
-        logger.debug('Name: ' + username);
-        logger.debug('Roles: ' + JSON.stringify(roles));
         return new Promise((resolve, reject) => {
+			var logger = LOGGER(con);
+			logger.info('Editing user "%s"...', oldUsername);
+			if (username != oldUsername) {
+				logger.debug('New name: ' + username);
+			}
+			logger.debug('Roles: ' + JSON.stringify(roles));
             Request.post(con, logger, {
                 uri: UPDATE_ENDPOINT,
-				form: {
-					oldUsername: oldUsername,
-					username: username,
-					password: password,
-					roles: roles
-				}
+				// Using body + content-type instead of form to handle roles array correctly
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+				body: queryString.stringify( { oldUsername: oldUsername, username: username, password: password, roles: roles } )
             })
             .then((response) => {
                 // response body is <admin service="roles.Edit"><response message="User 'test' have been successfully edited!" state="success"/></admin>
@@ -258,18 +252,22 @@ module.exports = class RolesService {
     jsonToUsers(json) {
         // response body is <admin service="roles.List"><users><user name="UserName"><role name="HOME_VIEW"/><role name="HOME_CONFIG"/></user></users></admin>
         var ret = [];
-		var users = json.admin.users.user;
-        for (var i=0; i<users.length; i++) {
-			var user = {};
-			user.name = users[i]['$'].name;
-			user.roles = [];
-			ret.push(user);
-			var roles = users[i]['role'];
-			for (var j=0; j<roles.length; j++) {
-				var role = roles[j]['$'].name;
-                user.roles.push(role);
-            }
-        }
+		var users = json.admin.users[0].user;
+		if (typeof (users) != "undefined") {
+			for (var i=0; i<users.length; i++) {
+				var user = {};
+				user.name = users[i]['$'].name;
+				user.roles = [];
+				ret.push(user);
+				var roles = users[i]['role'];
+				if (typeof (roles) != "undefined") {
+					for (var j=0; j<roles.length; j++) {
+						var role = roles[j]['$'].name;
+						user.roles.push(role);
+					}
+				}
+			}
+		}
         return ret;
     }
 
