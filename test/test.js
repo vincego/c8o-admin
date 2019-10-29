@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Connection = require('../app/util/Connection');
 const Service = require('../app/services/Service');
-const logger = require('../app/util/Log').init('test/test').logger('Test');
+const logger = require('../app/util/Log').init('test/log4js.json').logger('Test');
 
 class Test {
 
@@ -17,11 +17,11 @@ class Test {
     }
 
     handleError(con, error) {
-        logger.error('Error occured: ' + error);
+        logger.error('Error occured: ', error);
         if (con.cookie) {
             this.service.engine.logout(con)
             .catch((error) => {
-                logger.error('Error occured: ' + error);
+                logger.error('Error occured: ', error);
             });
         }
     }
@@ -86,24 +86,28 @@ class Test {
         .then(() => {
             logger.info('Test succesfull for server ' + con.Server.uri);
         })
+        // Error handler
         .catch((error) => {
             this.handleError(con, error);
         });
     }
 
     testAuth(con) {
+        logger.info("Test auth");
         // Login
         return this.service.engine.login(con)
         // Logout
         .then(() => {
             return this.service.engine.logout(con);
         })
+        // Error handler
         .catch((error) => {
             this.handleError(con, error);
         });
     }
 
     testConfig(con) {
+        logger.info("Test config");
         // Login
         return this.service.engine.login(con)
         // Update config
@@ -129,12 +133,14 @@ class Test {
         .then(() => {
             return this.service.engine.logout(con);
         })
+        // Error handler
         .catch((error) => {
             this.handleError(con, error);
         });
     }
 
     testGlobalSymbols(con) {
+        logger.info("Test global symbols");
         // Login
         return this.service.engine.login(con)
         // List
@@ -156,12 +162,14 @@ class Test {
         .then(() => {
             return this.service.engine.logout(con);
         })
+        // Error handler
         .catch((error) => {
             this.handleError(con, error);
         });
     }
 
     testKeys(con) {
+        logger.info("Test keys");
         // Login
         return this.service.engine.login(con)
         // List
@@ -191,12 +199,14 @@ class Test {
         .then(() => {
             return this.service.engine.logout(con);
         })
+        // Error handler
         .catch((error) => {
             this.handleError(con, error);
         });
     }
 	
 	testCertificates(con) {
+        logger.info("Test certificates");
 		// Login
         return this.service.engine.login(con)
         // List
@@ -236,14 +246,23 @@ class Test {
             logger.info('Candidates: ' + JSON.stringify(response.candidates));
             logger.info('Bindings: ' + JSON.stringify(response.bindings));
         })*/
+        // Logout
+        .then(() => {
+            return this.service.engine.logout(con);
+        })
+        // Error handler
+        .catch((error) => {
+            this.handleError(con, error);
+        });
 	}
 }
 
 var test = new Test();
 var con = test.initConnection();
+test.testAuth(con);
 //test.testServer(con);
 //test.testListConfig(con);
 //test.testGlobalSymbols(con);
 //test.testKeys(con);
-test.testCertificates(con);
+//test.testCertificates(con);
         

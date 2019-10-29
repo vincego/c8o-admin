@@ -1,0 +1,45 @@
+{
+    "appenders": {
+        "console-all": {
+            "type": "stdout",
+            "layout": {
+                "type": "pattern",
+                "pattern": "%d{hh:mm:ss,SSS} %[%p%] [%c] - %m"
+            }
+        },
+        "console": { 
+            "type": "logLevelFilter",
+            "appender": "console-all",
+            "level": "info"
+        },
+        "debug-all": {
+            "type": "file",
+            "filename": "test/test.debug.log",
+            "layout": {
+                "type": "pattern",
+                "pattern": "%d{dd/MM/yyyy hh:mm:ss,SSS} %p [%c] - %m"
+            }
+        },
+        "debug": { 
+            "type": "logLevelFilter",
+            "appender": "debug-all",
+            "level": "debug"
+        },
+        "error-all": {
+            "type": "file",
+            "filename": "test/test.error.log",
+            "layout": {
+                "type": "pattern",
+                "pattern": "%d{dd/MM/yyyy hh:mm:ss,SSS} %p [%c] - %m"
+            }
+        },
+        "error": { 
+            "type": "logLevelFilter",
+            "appender": "error-all",
+            "level": "error"
+        }
+    },
+    "categories": {
+        "default": { "appenders": [ "console","debug","error" ], "level": "DEBUG" }
+    }
+}

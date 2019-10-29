@@ -47,7 +47,7 @@ const Request = class Request {
                 logger.debug('Response body: %s', response.body);
                 xml2js.parseString(response.body, (error, result) => {
                     if (error) {
-                        logger.error('XML to JSON parsing error!', error);
+                        logger.error('XML to JSON parsing error!');
                         reject(error);
                     } else {
                         logger.debug('Response JSON: %s', JSON.stringify(result));
@@ -57,7 +57,7 @@ const Request = class Request {
                 });
             })
             .catch((error) => {
-                logger.error('Request error!', error);
+                logger.error('Request error!');
                 reject(error);
             });
         });

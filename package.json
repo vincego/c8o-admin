@@ -13,17 +13,14 @@
   },
   "author": "",
   "dependencies": {
-    "dateformat": "^3.0.2",
-    "express": "^4.16.1",
-    "fast-csv": "^2.4.1",
-    "jsontoxml": "^0.1.0",
-    "lodash": "^4.17.4",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.1",
-    "query-string": "^6.2.0",
+    "dateformat": "^3.0.3",
+    "jsontoxml": "^0.1.1",
+    "lodash": "^4.17.13",
+    "log4js": "5.2.0",
+    "query-string": "^6.8.3",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "url": "^0.11.0",
-    "winston": "^3.0.0-rc0",
-    "xml2js": "^0.4.19",
-    "bunyan": "^2.0.2"
+    "xml2js": "^0.4.22"
   }
 }
