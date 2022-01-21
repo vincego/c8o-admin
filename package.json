@@ -16,7 +16,7 @@
     "dateformat": "^3.0.3",
     "jsontoxml": "^0.1.1",
     "lodash": "^4.17.13",
-    "log4js": "5.2.0",
+    "log4js": "6.4.0",
     "query-string": "^6.8.3",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
